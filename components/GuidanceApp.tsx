@@ -11,6 +11,8 @@ export default function GuidanceApp() {
   const [loading, setLoading] = useState(false);
   const [source, setSource] = useState<LegalChunk | null>(null);
   const [debug, setDebug] = useState(false);
+  const [followUpAnswer, setFollowUpAnswer] = useState("");
+  const [answeredQuestion, setAnsweredQuestion] = useState("");
 
   function submit(event: FormEvent) {
     event.preventDefault();
@@ -25,6 +27,18 @@ export default function GuidanceApp() {
 
   function showSource(law: RelevantLaw) {
     setSource((data.chunks as LegalChunk[]).find((chunk) => law.citation_chunk_ids.includes(chunk.chunkId)) || null);
+  }
+
+  function answerFollowUp(event: FormEvent) {
+    event.preventDefault();
+    const question = result?.missing_information[0];
+    if (!question || !followUpAnswer.trim()) return;
+    setLoading(true);
+    setTimeout(() => {
+      setAnsweredQuestion(question);
+      setResult(generateGuidance(`${issue}\n\nFollow-up question: ${question}\nFollow-up answer: ${followUpAnswer.trim()}`, debug));
+      setLoading(false);
+    }, 450);
   }
 
   return (
@@ -46,7 +60,7 @@ export default function GuidanceApp() {
         </form>
         {!result && <p className="promise">Understand your rights. Know your options. Take the next step.</p>}
       </section>
-      {result && <Result guidance={result} showSource={showSource} />}
+      {result && <Result guidance={result} showSource={showSource} followUpAnswer={followUpAnswer} setFollowUpAnswer={setFollowUpAnswer} answerFollowUp={answerFollowUp} answeredQuestion={answeredQuestion} loading={loading} />}
       <footer id="about">
         <div className="brand"><span>N</span>Nyaaya</div>
         <p>Legal information for everyone in India.</p>
@@ -67,14 +81,15 @@ export default function GuidanceApp() {
   );
 }
 
-function Result({ guidance: g, showSource }: { guidance: Guidance; showSource: (law: RelevantLaw) => void }) {
+function Result({ guidance: g, showSource, followUpAnswer, setFollowUpAnswer, answerFollowUp, answeredQuestion, loading }: { guidance: Guidance; showSource: (law: RelevantLaw) => void; followUpAnswer: string; setFollowUpAnswer: (value: string) => void; answerFollowUp: (event: FormEvent) => void; answeredQuestion: string; loading: boolean }) {
   return <section id="result" className="result-wrap">
     {g.emergency && <div className="emergency"><span>Immediate safety first</span><h2>If you are in immediate danger</h2><ul>{g.emergency_guidance?.map((item) => <li key={item}>{item}</li>)}</ul></div>}
     <div className="result-head"><span className={`urgency ${g.urgency}`}>{g.urgency}</span><h2>{g.issue_summary}</h2><p>Based on the verified sources currently available.</p></div>
     <div className="result-grid"><div className="result-main">
       <ResultSection number="01" title="What you can do now"><ol className="actions">{[...g.immediate_actions, ...g.next_steps].slice(0, 6).map((item) => <li key={item}>{item}</li>)}</ol></ResultSection>
       <ResultSection number="02" title="Rights that may be relevant">{g.relevant_laws.length ? g.relevant_laws.map((law) => <article className="law" key={law.provision}><div><span>{law.relevance}</span><b>{law.provision}</b></div><h3>{law.title}</h3><p>{law.explanation}</p><button onClick={() => showSource(law)}>View verified source <b>↗</b></button></article>) : <div className="no-law"><b>No specific constitutional provision shown</b><p>That is intentional: the current source does not contain a specific remedy for this category.</p></div>}</ResultSection>
-      {g.missing_information.length > 0 && <ResultSection number="03" title="What we still need to know"><p>These details could materially change the guidance:</p><ul className="questions">{g.missing_information.map((item) => <li key={item}>{item}</li>)}</ul></ResultSection>}
+      {g.missing_information.length > 0 && <ResultSection number="03" title="One thing we still need to know"><form className="follow-up" onSubmit={answerFollowUp}><label htmlFor="follow-up-answer">{g.missing_information[0]}</label><div><input id="follow-up-answer" value={followUpAnswer} onChange={(event) => setFollowUpAnswer(event.target.value)} placeholder="Type your answer…" required /><button type="submit" disabled={loading}>{loading ? "Refining…" : "Refine my guidance"} <b>→</b></button></div></form></ResultSection>}
+      {answeredQuestion && g.missing_information.length === 0 && <div className="answered-follow-up"><span>Answer considered</span><p>{answeredQuestion}</p><b>{followUpAnswer}</b></div>}
     </div><aside className="result-side"><div><span>Limits of this answer</span><p>{g.limitations}</p></div>{g.professional_help_recommended && <div><span>Professional help</span><p>A qualified lawyer or legal aid service may be appropriate for this situation.</p></div>}<a href="/sources">See what our database covers →</a></aside></div>
     {Boolean(g.debug) && <details className="debug"><summary>Retrieval trace</summary><pre>{JSON.stringify(g.debug, null, 2)}</pre></details>}
   </section>;
