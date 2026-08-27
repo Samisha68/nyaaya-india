@@ -2,17 +2,26 @@
 
 Nyaaya helps a person describe what happened in ordinary language and receive careful, practical guidance grounded in verified Indian legal sources. It is legal information, not legal advice.
 
+## Why this project exists
+
+This project was created solely to help people understand their situation, preserve important information, and identify practical next steps when facing a legal problem in India.
+
+I believe in the Indian judicial system and in making reliable legal information easier for ordinary people to understand. Nyaaya is intended to support access to justice by helping users navigate verified information—not to replace advocates, courts, legal-aid authorities, police, regulators, or any other institution within the Indian justice system.
+
+The project does not promise outcomes, provide professional legal advice, or claim that every legal remedy is available in its current database. When verified legal or procedural material is unavailable, the platform should say so clearly instead of guessing.
+
 ## What is included
 
 - Minimal consumer experience with no intake questionnaire
 - Hybrid semantic + keyword retrieval over the real official Constitution PDF
 - Structure-aware Article ingestion with preserved headings, text and metadata
-- Structured guidance rendering (never raw model Markdown)
+- Practical immediate-action, evidence, escalation, police, lawyer and RTI guidance
+- Structured guidance rendering rather than raw model Markdown
 - Citation verification and source drawer
 - Explicit knowledge-boundary handling for tenancy, consumer, employment and contract questions
 - Emergency-first hierarchy without unverified phone numbers
 - Follow-up questions only when facts materially affect the answer
-- `/sources` transparency registry and opt-in developer retrieval trace
+- `/sources` transparency registry
 
 ## Architecture
 
@@ -64,10 +73,6 @@ The ingestion output carries source, jurisdiction, provision, document and verif
 ## Citation verification
 
 Before a provision is shown, the generator checks that the retrieved chunk has a source ID, Article number, document text, and that the text contains the claimed Article. Unsupported candidates are rejected and appear only in developer mode. The source drawer renders the exact ingested text and links to the official document.
-
-## Development mode
-
-Use the subtle “Developer mode” control in the footer before generating an answer. The trace includes classification, generated query, retrieved chunk IDs, hybrid scores, supplied provisions, accepted citations and rejected citations. It is off by default.
 
 ## Testing
 
