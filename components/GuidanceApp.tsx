@@ -44,7 +44,7 @@ export default function GuidanceApp() {
   return (
     <main>
       <nav className="nav" aria-label="Main navigation">
-        <a className="brand" href="/"><span>N</span>Nyaaya</a>
+        <a className="brand" href="/"><img src="/brand-mark.png" alt="" />Nyaaya</a>
         <div className="navlinks"><a href="/sources">Sources</a><a href="#about">About</a></div>
       </nav>
       <section className={`hero ${result ? "hero-compact" : ""}`}>
@@ -62,7 +62,7 @@ export default function GuidanceApp() {
       </section>
       {result && <Result guidance={result} showSource={showSource} followUpAnswer={followUpAnswer} setFollowUpAnswer={setFollowUpAnswer} answerFollowUp={answerFollowUp} answeredQuestion={answeredQuestion} loading={loading} />}
       <footer id="about">
-        <div className="brand"><span>N</span>Nyaaya</div>
+        <div className="brand"><img src="/brand-mark.png" alt="" />Nyaaya</div>
         <p>Legal information for everyone in India.</p>
         <small>This platform provides legal information and guidance, not legal advice. Laws and procedures may depend on your specific circumstances and jurisdiction.</small>
       </footer>
