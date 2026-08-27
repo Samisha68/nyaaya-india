@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-html-link-for-pages, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/no-noninteractive-element-interactions */
 import { FormEvent, useState } from "react";
+import Image from "next/image";
 import { generateGuidance } from "@/lib/ai/guidance";
 import data from "@/data/processed/constitution-india-2026.json";
 import type { Guidance, LegalChunk, RelevantLaw } from "@/lib/legal/types";
@@ -44,7 +45,7 @@ export default function GuidanceApp() {
   return (
     <main>
       <nav className="nav" aria-label="Main navigation">
-        <a className="brand" href="/"><img src="/brand-mark.png" alt="" />Nyaaya</a>
+        <a className="brand" href="/"><Image src="/brand-mark.png" alt="" width={40} height={40} />Nyaaya</a>
         <div className="navlinks"><a href="/sources">Sources</a><a href="#about">About</a></div>
       </nav>
       <section className={`hero ${result ? "hero-compact" : ""}`}>
@@ -62,7 +63,7 @@ export default function GuidanceApp() {
       </section>
       {result && <Result guidance={result} showSource={showSource} followUpAnswer={followUpAnswer} setFollowUpAnswer={setFollowUpAnswer} answerFollowUp={answerFollowUp} answeredQuestion={answeredQuestion} loading={loading} />}
       <footer id="about">
-        <div className="brand"><img src="/brand-mark.png" alt="" />Nyaaya</div>
+        <div className="brand"><Image src="/brand-mark.png" alt="" width={36} height={36} />Nyaaya</div>
         <p>Legal information for everyone in India.</p>
         <small>This platform provides legal information and guidance, not legal advice. Laws and procedures may depend on your specific circumstances and jurisdiction.</small>
       </footer>
