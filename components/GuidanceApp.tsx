@@ -10,7 +10,7 @@ export default function GuidanceApp() {
   const [result, setResult] = useState<Guidance | null>(null);
   const [loading, setLoading] = useState(false);
   const [source, setSource] = useState<LegalChunk | null>(null);
-  const [debug, setDebug] = useState(false);
+  const debug = false;
   const [followUpAnswer, setFollowUpAnswer] = useState("");
   const [answeredQuestion, setAnsweredQuestion] = useState("");
 
@@ -64,7 +64,6 @@ export default function GuidanceApp() {
       <footer id="about">
         <div className="brand"><span>N</span>Nyaaya</div>
         <p>Legal information for everyone in India.</p>
-        <button className="debug-toggle" onClick={() => setDebug(!debug)}>Developer mode: {debug ? "on" : "off"}</button>
         <small>This platform provides legal information and guidance, not legal advice. Laws and procedures may depend on your specific circumstances and jurisdiction.</small>
       </footer>
       {source && <div className="modal-bg" onClick={() => setSource(null)}>
